@@ -20,11 +20,13 @@ import com.futu.openapi.pb.QotGetSubInfo;
 import com.futu.openapi.pb.QotGetWarrant;
 import com.futu.openapi.pb.QotRegQotPush;
 import com.futu.openapi.pb.QotSub;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class QotSpi implements FTSPI_Qot
 {
 
@@ -38,7 +40,7 @@ public class QotSpi implements FTSPI_Qot
 	@Override
 	public void onReply_GetBasicQot(FTAPI_Conn client, int nSerialNo, QotGetBasicQot.Response rsp)
 	{
-		System.out.println(rsp);
+		log.info(rsp.toString());
 		for (QotListener qotListener : qotListeners)
 		{
 			if (!(qotListener instanceof GetBasicQotListener))
@@ -62,13 +64,13 @@ public class QotSpi implements FTSPI_Qot
 	@Override
 	public void onReply_Sub(FTAPI_Conn client, int nSerialNo, QotSub.Response rsp)
 	{
-		System.out.println(rsp);
+		log.info(rsp.toString());
 	}
 
 	@Override
 	public void onReply_GetOptionChain(FTAPI_Conn client, int nSerialNo, QotGetOptionChain.Response rsp)
 	{
-		System.out.println(rsp);
+		log.info(rsp.toString());
 		GetOptionChainReplyDto getOptionChainReplyDto = new GetOptionChainReplyDto();
 		List<OptionChainItemDto> optionChainItemDtos = new ArrayList<>();
 		getOptionChainReplyDto.setOptionChainItemDtoList(optionChainItemDtos);
@@ -100,15 +102,15 @@ public class QotSpi implements FTSPI_Qot
 	@Override
 	public void onReply_GetOrderBook(FTAPI_Conn client, int nSerialNo, QotGetOrderBook.Response rsp)
 	{
-		System.out.println(rsp);
+		log.info(rsp.toString());
 		if(rsp.getS2C() == null)
 		{
-			System.err.println("响应orderBook为空");
+			log.error("响应orderBook为空");
 			return;
 		}
 		if(rsp.getS2C().getOrderBookAskListCount() == 0)
 		{
-			System.out.println("请求交易表没有值");
+			log.info("请求交易表没有值");
 			return;
 		}
 		String code = rsp.getS2C().getSecurity().getCode();
@@ -136,6 +138,7 @@ public class QotSpi implements FTSPI_Qot
 	@Override
 	public void onReply_GetWarrant(FTAPI_Conn client, int nSerialNo, QotGetWarrant.Response rsp)
 	{
+		log.info(rsp.toString());
 		List<QotGetWarrant.WarrantData> warrantDataListList = rsp.getS2C().getWarrantDataListList();
 		GetWarrantReplyDto warrantReplyDto = new GetWarrantReplyDto();
 		warrantReplyDto.setWarrantDataList(warrantDataListList);
@@ -158,7 +161,7 @@ public class QotSpi implements FTSPI_Qot
 	{
 		if(rsp.getRetType()==0)
 		{
-			System.out.println("注册push成功");
+			log.info("注册push成功");
 		}
 	}
 }
