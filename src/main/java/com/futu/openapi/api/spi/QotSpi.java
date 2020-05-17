@@ -71,6 +71,11 @@ public class QotSpi implements FTSPI_Qot
 	public void onReply_GetOptionChain(FTAPI_Conn client, int nSerialNo, QotGetOptionChain.Response rsp)
 	{
 		log.info(rsp.toString());
+		if(rsp.getRetType() != 0)
+		{
+			log.error("请求期权失败");
+			return;
+		}
 		GetOptionChainReplyDto getOptionChainReplyDto = new GetOptionChainReplyDto();
 		List<OptionChainItemDto> optionChainItemDtos = new ArrayList<>();
 		getOptionChainReplyDto.setOptionChainItemDtoList(optionChainItemDtos);

@@ -13,5 +13,4 @@ public class Option extends Stock
 
 	private String strikeTime;
 
-	private String ownerSecurityCode;
 }

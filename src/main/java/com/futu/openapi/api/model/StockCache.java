@@ -6,7 +6,9 @@ import com.futu.openapi.api.dto.GetOrderBookReplyDto;
 import com.futu.openapi.api.dto.GetWarrantReplyDto;
 import com.futu.openapi.api.dto.OptionChainItemDto;
 import com.futu.openapi.api.enums.StockTypeEnum;
+import com.futu.openapi.pb.QotCommon;
 import com.futu.openapi.pb.QotGetWarrant;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class StockCache
 {
 
@@ -39,6 +42,7 @@ public class StockCache
 			option.setOwnerCode(optionChainReplyDto.getSecurityCode());
 			option.setOwnerStock(stock);
 			option.setStrikePrice(optionChainItemDto.getStrikePrice());
+			option.setStrikeTime(optionChainItemDto.getStrikeTime());
 			stockMapByCode.putIfAbsent(option.getCode(), option);
 			options.add(option);
 		}
@@ -56,6 +60,11 @@ public class StockCache
 		stock.setWarrantData(getWarrantReplyDto.getWarrantDataList());
 		for (QotGetWarrant.WarrantData warrantData : getWarrantReplyDto.getWarrantDataList())
 		{
+			if(warrantData.getStatus() != QotCommon.WarrantStatus.WarrantStatus_Normal_VALUE)
+			{
+				log.info("状态非正常的涡轮"+warrantData);
+				continue;
+			}
 			WarrantData stockWarrant = new WarrantData();
 			stockWarrant.setStockType(StockTypeEnum.WARRANT);
 			stockWarrant.setCode(warrantData.getStock().getCode());

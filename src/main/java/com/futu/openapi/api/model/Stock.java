@@ -6,6 +6,7 @@ import com.futu.openapi.api.dto.GetOrderBookReplyDto;
 import com.futu.openapi.api.dto.GetWarrantReplyDto;
 import com.futu.openapi.api.enums.StockTypeEnum;
 import com.futu.openapi.pb.QotGetWarrant;
+import com.google.gson.annotations.Expose;
 import lombok.Data;
 import lombok.ToString;
 
@@ -21,6 +22,7 @@ public class Stock
 
 	private String ownerCode;
 
+	@Expose
 	private Stock ownerStock;
 
 	private GetBasicQotReplyDto basicQot;
